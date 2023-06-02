@@ -10,14 +10,21 @@ public class BaseComponent {
     private int x;
     private int y;
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
-    public BaseComponent(int width, int height, int defaultX, int defaultY) {
+    private Color color;
+
+    private final int frameHeight;
+
+    public BaseComponent(int width, int height, int defaultX, int defaultY, Color color, int frameHeight) {
         this.x = defaultX;
         this.y = defaultY;
         this.width = width;
         this.height = height;
+        this.color = color;
+
+        this.frameHeight = frameHeight;
 
         components.add(this);
     }
@@ -39,6 +46,35 @@ public class BaseComponent {
 
     public int getHeight() {
         return height;
+    }
+    public int getWidth() {
+        return width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public boolean isInBounds(int position) {
+
+        if(position == this.frameHeight - this.getHeight())
+            return false;
+
+        else if (position == 0)
+            return false;
+
+        return true;
     }
 
     public void tick(){};
