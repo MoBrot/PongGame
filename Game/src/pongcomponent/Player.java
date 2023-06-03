@@ -1,7 +1,9 @@
 package pongcomponent;
 
+import GUI.GamePanel;
 import main.Main;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Player extends BaseComponent {
@@ -13,8 +15,11 @@ public class Player extends BaseComponent {
     private boolean movingUp;
     private boolean movingDown;
 
-    public Player(int width, int height, int defaultX, int defaultY, Color color, int frameHeight) {
+    private final int id;
+
+    public Player(int width, int height, int defaultX, int defaultY, Color color, int frameHeight, int id) {
         super(width, height, defaultX, defaultY, color, frameHeight);
+        this.id = id;
     }
 
     public void setMovingUp(boolean movingUp) {
@@ -40,8 +45,18 @@ public class Player extends BaseComponent {
     }
     public void addPoint() {
         this.points++;
+        JLabel label;
+        if(this.getId() == 1)
+            label = GamePanel.player1Points;
+        else
+            label = GamePanel.player2Points;
+
+        GamePanel.updateLabel(this, label);
     }
 
+    public int getId() {
+        return id;
+    }
 
     @Override
     public void tick() {

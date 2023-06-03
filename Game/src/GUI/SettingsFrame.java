@@ -11,6 +11,8 @@ public class SettingsFrame extends JFrame {
 
     private final JButton apply = new JButton();
 
+    //TODO - 3color pickers with color screen
+
     public SettingsFrame() {
 
         apply.addActionListener(e -> {
@@ -28,6 +30,7 @@ public class SettingsFrame extends JFrame {
             player1.setColor(Settings.getPlayer1Color());
             player2.setColor(Settings.getPlayer2Color());
 
+            Settings.closeSettingsFrame();
         });
     }
 }

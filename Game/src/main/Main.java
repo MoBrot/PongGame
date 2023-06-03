@@ -1,6 +1,7 @@
 package main;
 
 import GUI.GamePanel;
+import GUI.MainPanel;
 import listener.KeyHandler;
 import pongcomponent.Ball;
 import pongcomponent.Player;
@@ -8,7 +9,6 @@ import settings.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class Main {
 
@@ -29,6 +29,9 @@ public class Main {
     public static Ball getBall() {
         return ball;
     }
+
+    private static GamePanel gamePanel;
+    private static MainPanel mainPanel;
 
     public static void main(String[] args) {
 
@@ -53,8 +56,8 @@ public class Main {
 
         int playerDefaultY = (frameHeight / 2) - (playerHeight / 2);
 
-        player1 = new Player(playerWidth, playerHeight, playerDistance + playerWidth, playerDefaultY, Settings.getPlayer1Color(), frameHeight);
-        player2 = new Player(playerWidth, playerHeight, frameWidth - playerDistance - playerWidth, playerDefaultY, Settings.getPlayer2Color(), frameHeight);
+        player1 = new Player(playerWidth, playerHeight, playerDistance + playerWidth, playerDefaultY, Settings.getPlayer1Color(), frameHeight, 1);
+        player2 = new Player(playerWidth, playerHeight, frameWidth - playerDistance - playerWidth, playerDefaultY, Settings.getPlayer2Color(), frameHeight, 2);
 
         ball = new Ball(
                 (int) Settings.getBallSize().getWidth(),
@@ -64,36 +67,29 @@ public class Main {
                 frameHeight,
                 frameWidth);
 
-        GamePanel gamePanel = new GamePanel(frame.getSize());
+        gamePanel = new GamePanel(frame.getSize());
 
         frame.add(gamePanel);
         frame.addKeyListener(handler);
 
+        mainPanel = new MainPanel(gamePanel);
+
         play(gamePanel);
     }
 
-
-    public static final Random random = new Random();
     public static void play(GamePanel gamePanel) {
 
         gamePanel.startGame(60);
+        getBall().randomMotion();
 
-        // Set random ball movement
-        boolean up = random.nextBoolean();
-        if(up)
-            getBall().setMovingUp(true);
-        else
-            getBall().setMovingDown(true);
-
-        boolean left = random.nextBoolean();
-        if(left)
-            getBall().setMovingLeft(true);
-        else
-            getBall().setMovingRight(true);
-
+        mainPanel.setVisible(false);
+        gamePanel.setVisible(true);
     }
 
     public static void stop(GamePanel gamePanel) {
         gamePanel.gameThread = null;
+
+        mainPanel.setVisible(true);
+        gamePanel.setVisible(true);
     }
 }

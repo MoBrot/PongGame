@@ -3,20 +3,22 @@ package pongcomponent;
 import main.Main;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Ball extends BaseComponent {
 
-    private int defaultMotion = 5;
-    private int playerBounceMotion = 8;
+    private final int defaultMotion = 5;
 
     private final int frameWidth;
 
     private boolean movingLeft = false;
-    private boolean movingRight = false;
     private boolean movingUp = false;
     private boolean movingDown = false;
 
     private final int frameHeight;
+
+    private final int defaultX;
+    private final int defaultY;
 
     public Ball(int width, int height, int defaultX, int defaultY, Color color, int frameHeight, int frameWidth) {
 
@@ -24,15 +26,15 @@ public class Ball extends BaseComponent {
 
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
+
+        this.defaultX = defaultX;
+        this.defaultY = defaultY;
     }
 
     @Override
     public void tick() {
 
         int nextYPosition = this.getY();
-        int nextXPosition;
-
-        int xMotion = defaultMotion;
 
         // Calculate Y
         if(this.getY() == 0) {
@@ -48,33 +50,43 @@ public class Ball extends BaseComponent {
             nextYPosition = this.getY() - this.defaultMotion;
         else if (movingDown)
             nextYPosition = this.getY() + this.defaultMotion;
-
         this.setY(nextYPosition);
 
         // Calculate X
-        // Calculate PlayerBounce
-        if(this.getY() >= Main.getPlayer1().getY() - Main.getPlayer1().getHeight() && this.getY() <= Main.getPlayer1().getY())
+        // Colid left
+        if(this.getX() == 0) {
 
+            Main.getPlayer2().addPoint();
 
-        if(movingLeft)
-            xMotion = xMotion * (-1);
+            randomMotion();
 
-        this.setX(xMotion + this.getX());
+            // Colid right
+        } else if(this.getX() == frameWidth) {
 
-        /*
-        // Calculate Win
-        if(touchesXBorder(nextXPosition)) {
-            // Add point to player who made the point
+            Main.getPlayer1().addPoint();
 
+            randomMotion();
 
+            // Calculate PlayerBounce
+        }else if(this.getX() == Main.getPlayer1().getX() + Main.getPlayer1().getWidth() || this.getX() == Main.getPlayer2().getX() - (Main.getPlayer2().getWidth() * 2)) {
 
+            if (colidsWithPlayer(Main.getPlayer1())) {
+                movingLeft = false;
+            } else if (colidsWithPlayer(Main.getPlayer2())) {
+                movingLeft = true;
+            }
         }
 
-         */
+        int motion = defaultMotion;
+        if(movingLeft)
+            motion = defaultMotion * (-1);
+
+        this.setX(motion + this.getX());
     }
 
-    private boolean touchesXBorder(int position) {
-        return false;
+    private boolean colidsWithPlayer(Player player) {
+        int y = this.getY() + (this.getHeight() / 2);
+        return player.getY() <= y && y <= player.getY() + player.getHeight();
     }
 
     public void setMovingDown(boolean movingDown) {
@@ -86,8 +98,23 @@ public class Ball extends BaseComponent {
     public void setMovingLeft(boolean movingLeft) {
         this.movingLeft = movingLeft;
     }
-    public void setMovingRight(boolean movingRight) {
-        this.movingRight = movingRight;
+
+    private final Random random = new Random();
+    public void randomMotion() {
+
+        this.setX(this.defaultX);
+        this.setY(this.defaultY);
+
+        // Set random ball movement
+        boolean up = random.nextBoolean();
+        if(up)
+            this.setMovingUp(true);
+        else
+            this.setMovingDown(true);
+
+        boolean left = random.nextBoolean();
+        if(left)
+            this.setMovingLeft(true);
     }
 
     @Override
