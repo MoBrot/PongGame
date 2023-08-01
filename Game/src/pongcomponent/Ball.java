@@ -36,6 +36,7 @@ public class Ball extends BaseComponent {
     public void tick() {
 
         int nextYPosition = this.getY();
+        Rectangle ballHitBox = Main.getBall().getHitBox();
 
         // Calculate Y
         if(this.getY() == 0) {
@@ -69,13 +70,14 @@ public class Ball extends BaseComponent {
             randomMotion();
 
             // Calculate PlayerBounce
-        }else if(this.getX() == Main.getPlayer1().getX() + Main.getPlayer1().getWidth() || this.getX() + this.getWidth() == Main.getPlayer2().getX()) {
+        }else if(Main.getPlayer1().getHitBox().intersects(ballHitBox)) {
 
-            if (colidsWithPlayerY(Main.getPlayer1())) {
-                movingLeft = false;
-            } else if (colidsWithPlayerY(Main.getPlayer2())) {
-                movingLeft = true;
-            }
+            movingLeft = false;
+
+        } else if (Main.getPlayer2().getHitBox().intersects(ballHitBox)) {
+
+            movingLeft = true;
+
         }
 
         int motion = defaultMotion;
@@ -83,11 +85,6 @@ public class Ball extends BaseComponent {
             motion = defaultMotion * (-1);
 
         this.setX(motion + this.getX());
-    }
-
-    private boolean colidsWithPlayerY(Player player) {
-        int y = this.getY() + (this.getHeight() / 2);
-        return player.getY() <= y && y <= player.getY() + player.getHeight();
     }
 
     public void setMovingDown(boolean movingDown) {
@@ -118,11 +115,18 @@ public class Ball extends BaseComponent {
 
     @Override
     public void draw(Graphics2D graphics2D) {
+
         graphics2D.setColor(this.getColor());
         graphics2D.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
-        int y = this.getY() + (this.getHeight() / 2);
+        /*
+
+        Draw HitBox
+
         graphics2D.setColor(Color.green);
-        graphics2D.drawLine(0, 0, this.getX(), y);
+        graphics2D.drawRect((int) this.getHitBox().getX(), (int) this.getHitBox().getY(), (int) this.getHitBox().getWidth(), (int) this.getHitBox().getHeight());
+
+         */
+
     }
 }
