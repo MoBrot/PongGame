@@ -38,7 +38,6 @@ public class Main {
         Settings.loadSettings();
 
         JFrame frame = new JFrame();
-        KeyHandler handler = new KeyHandler();
 
         // Frame settings
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,28 +67,38 @@ public class Main {
                 frameWidth);
 
         gamePanel = new GamePanel(frame.getSize());
-
-        frame.add(gamePanel);
-        frame.addKeyListener(handler);
-
         mainPanel = new MainPanel(gamePanel);
+
+        frame.add(mainPanel);
+        frame.add(gamePanel);
+        frame.addKeyListener(new KeyHandler());
 
         play(gamePanel);
     }
 
+    public static GameState gameState;
+
     public static void play(GamePanel gamePanel) {
+
+        gameState = GameState.PLAYING;
 
         gamePanel.startGame(60);
         getBall().randomMotion();
+
+        Main.getPlayer1().setToDefault();
+        Main.getPlayer2().setToDefault();
 
         mainPanel.setVisible(false);
         gamePanel.setVisible(true);
     }
 
     public static void stop(GamePanel gamePanel) {
+
+        gameState = GameState.MAIN_MENU;
+
         gamePanel.gameThread = null;
 
         mainPanel.setVisible(true);
-        gamePanel.setVisible(true);
+        gamePanel.setVisible(false);
     }
 }

@@ -17,6 +17,9 @@ public class BaseComponent {
 
     private final int frameHeight;
 
+    private final Rectangle hitBox = new Rectangle();
+
+
     public BaseComponent(int width, int height, int defaultX, int defaultY, Color color, int frameHeight) {
         this.x = defaultX;
         this.y = defaultY;
@@ -26,15 +29,21 @@ public class BaseComponent {
 
         this.frameHeight = frameHeight;
 
+        hitBox.setBounds(this.x, this.y, this.width, this.height);
+
         components.add(this);
     }
 
     public void setY(int y) {
         this.y = y;
+
+        this.hitBox.setLocation(this.x, this.y);
     }
 
     public void setX(int x) {
         this.x = x;
+
+        this.hitBox.setLocation(this.x, this.y);
     }
 
     public int getY() {
@@ -64,6 +73,10 @@ public class BaseComponent {
 
     public Color getColor() {
         return color;
+    }
+
+    public Rectangle getHitBox() {
+        return hitBox;
     }
 
     public boolean isInBounds(int position) {

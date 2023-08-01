@@ -1,5 +1,6 @@
 package listener;
 
+import main.GameState;
 import main.Main;
 import settings.Settings;
 
@@ -8,7 +9,11 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+
+        if(Main.gameState != GameState.SETTINGS)
+            return;
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -21,6 +26,9 @@ public class KeyHandler implements KeyListener {
     }
 
     public void setMoving(int key, boolean toggle) {
+
+        if(Main.gameState != GameState.PLAYING)
+            return;
 
         if(key == Settings.getPlayer1UpKey())
             Main.getPlayer1().setMovingUp(toggle);

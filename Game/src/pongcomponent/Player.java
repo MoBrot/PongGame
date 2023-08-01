@@ -17,9 +17,19 @@ public class Player extends BaseComponent {
 
     private final int id;
 
+    private final int defaultX;
+    private final int defaultY;
+
     public Player(int width, int height, int defaultX, int defaultY, Color color, int frameHeight, int id) {
         super(width, height, defaultX, defaultY, color, frameHeight);
         this.id = id;
+        this.defaultX = defaultX;
+        this.defaultY = defaultY;
+    }
+
+    public void setToDefault() {
+        this.setX(defaultX);
+        this.setY(defaultY);
     }
 
     public void setMovingUp(boolean movingUp) {

@@ -1,7 +1,10 @@
 package settings;
 
 import GUI.SettingsFrame;
+import main.GameState;
+import main.Main;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -29,24 +32,25 @@ public class Settings {
     public static void loadSettings() {
 
         try (InputStream fis = Settings.class.getResourceAsStream("/settings.properties")) {
+
             properties.load(fis);
+
+            player1UpKey = Integer.parseInt(properties.getProperty("player1_up", String.valueOf(KeyEvent.VK_W)));
+            player1DownKey = Integer.parseInt(properties.getProperty("player1_down", String.valueOf(KeyEvent.VK_S)));
+
+            player2UpKey = Integer.parseInt(properties.getProperty("player2_up", String.valueOf(KeyEvent.VK_UP)));
+            player2DownKey = Integer.parseInt(properties.getProperty("player2_down", String.valueOf(KeyEvent.VK_DOWN)));
+
+            player1Color = new Color(Integer.parseInt(properties.getProperty("player1_rgb", String.valueOf(Color.RED.getRGB()))));
+            player2Color = new Color(Integer.parseInt(properties.getProperty("player2_rgb", String.valueOf(Color.BLUE.getRGB()))));
+
+            int propertyBallSize = Integer.parseInt(properties.getProperty("ball_size", ballDefaultSize));
+            ballSize = new Dimension(propertyBallSize, propertyBallSize);
+            ballColor = new Color(Integer.parseInt(properties.getProperty("ball_rgb", String.valueOf(Color.WHITE.getRGB()))));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        player1UpKey = Integer.parseInt(properties.getProperty("player1_up", String.valueOf(KeyEvent.VK_W)));
-        player1DownKey = Integer.parseInt(properties.getProperty("player1_down", String.valueOf(KeyEvent.VK_S)));
-
-        player2UpKey = Integer.parseInt(properties.getProperty("player2_up", String.valueOf(KeyEvent.VK_UP)));
-        player2DownKey = Integer.parseInt(properties.getProperty("player2_down", String.valueOf(KeyEvent.VK_DOWN)));
-
-        player1Color = new Color(Integer.parseInt(properties.getProperty("player1_rgb", String.valueOf(Color.RED.getRGB()))));
-        player2Color = new Color(Integer.parseInt(properties.getProperty("player2_rgb", String.valueOf(Color.BLUE.getRGB()))));
-
-        int propertyBallSize = Integer.parseInt(properties.getProperty("ball_size", ballDefaultSize));
-        ballSize = new Dimension(propertyBallSize, propertyBallSize);
-        ballColor = new Color(Integer.parseInt(properties.getProperty("ball_rgb", String.valueOf(Color.WHITE.getRGB()))));
-
     }
 
     public static int getPlayer1UpKey() {
@@ -84,8 +88,14 @@ public class Settings {
     public static void openSettingsFrame() {
         settingsFrame.setVisible(true);
         settingsFrame.setLocationRelativeTo(null);
+
+        Main.gameState = GameState.SETTINGS;
+
     }
     public static void closeSettingsFrame() {
         settingsFrame.setVisible(false);
+
+        Main.gameState = GameState.MAIN_MENU;
+
     }
 }

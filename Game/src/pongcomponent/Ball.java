@@ -2,6 +2,7 @@ package pongcomponent;
 
 import main.Main;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.Random;
 
@@ -68,11 +69,11 @@ public class Ball extends BaseComponent {
             randomMotion();
 
             // Calculate PlayerBounce
-        }else if(this.getX() == Main.getPlayer1().getX() + Main.getPlayer1().getWidth() || this.getX() == Main.getPlayer2().getX() - (Main.getPlayer2().getWidth() * 2)) {
+        }else if(this.getX() == Main.getPlayer1().getX() + Main.getPlayer1().getWidth() || this.getX() + this.getWidth() == Main.getPlayer2().getX()) {
 
-            if (colidsWithPlayer(Main.getPlayer1())) {
+            if (colidsWithPlayerY(Main.getPlayer1())) {
                 movingLeft = false;
-            } else if (colidsWithPlayer(Main.getPlayer2())) {
+            } else if (colidsWithPlayerY(Main.getPlayer2())) {
                 movingLeft = true;
             }
         }
@@ -84,7 +85,7 @@ public class Ball extends BaseComponent {
         this.setX(motion + this.getX());
     }
 
-    private boolean colidsWithPlayer(Player player) {
+    private boolean colidsWithPlayerY(Player player) {
         int y = this.getY() + (this.getHeight() / 2);
         return player.getY() <= y && y <= player.getY() + player.getHeight();
     }
@@ -106,14 +107,12 @@ public class Ball extends BaseComponent {
         this.setY(this.defaultY);
 
         // Set random ball movement
-        boolean up = random.nextBoolean();
-        if(up)
+        if(random.nextBoolean())
             this.setMovingUp(true);
         else
             this.setMovingDown(true);
 
-        boolean left = random.nextBoolean();
-        if(left)
+        if(random.nextBoolean())
             this.setMovingLeft(true);
     }
 
@@ -121,5 +120,9 @@ public class Ball extends BaseComponent {
     public void draw(Graphics2D graphics2D) {
         graphics2D.setColor(this.getColor());
         graphics2D.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+
+        int y = this.getY() + (this.getHeight() / 2);
+        graphics2D.setColor(Color.green);
+        graphics2D.drawLine(0, 0, this.getX(), y);
     }
 }

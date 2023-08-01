@@ -5,7 +5,6 @@ import pongcomponent.BaseComponent;
 import pongcomponent.Player;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class GamePanel extends JPanel {
@@ -16,43 +15,49 @@ public class GamePanel extends JPanel {
     private final JButton mainMenu = new JButton();
 
     public GamePanel(Dimension size) {
+
         this.setSize(size);
         this.setBackground(Color.BLACK);
+        this.setLayout(null);
 
-        int middle = (int) (size.getWidth() / 2);
-        int labelWidth = 150;
+        final int middle = (int) (size.getWidth() / 2);
+        final int labelWidth = 150;
 
-        addPointLabel(middle - labelWidth, player1Points, labelWidth, Main.getPlayer1());
-        addPointLabel(middle + labelWidth, player2Points, labelWidth, Main.getPlayer2());
+        final Font defaultFont = new Font("verdana", Font.PLAIN, 18);
 
-        mainMenu.addActionListener((e -> {
+        addPointLabel(middle - labelWidth * 2, player1Points, labelWidth, Main.getPlayer1(), defaultFont);
+        addPointLabel(middle + labelWidth, player2Points, labelWidth, Main.getPlayer2(), defaultFont);
 
+        final int buttonWidth = 175;
+        mainMenu.setBounds(middle - (buttonWidth / 2), 0, buttonWidth, 75);
 
+        mainMenu.setText("MainMenu");
+        mainMenu.setBackground(Color.GRAY);
+        mainMenu.setBorder(null);
+        mainMenu.setForeground(Color.WHITE);
+        mainMenu.setFont(defaultFont);
 
-            Main.stop(this);
+        mainMenu.addActionListener((e -> Main.stop(this)));
 
-        }));
+        this.add(mainMenu);
     }
 
-    private void addPointLabel(int x, JLabel label, int labelWidth, Player player) {
+    private void addPointLabel(int x, JLabel label, int labelWidth, Player player, Font font) {
 
         updateLabel(player, label);
 
         label.setForeground(Color.WHITE);
-        label.setFont(new Font("verdana", Font.PLAIN, 18));
+        label.setFont(font);
 
         label.setBounds(x, 0, labelWidth, 100);
-
-        label.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
         this.add(label);
 
     }
 
     public static void updateLabel(Player player, JLabel label) {
-
         label.setText(
-                "Player" + player.getId() + ": " + player.getPoints() + "points"
+                "Player" + player.getId() + ": \n" + player.getPoints() + "points"
         );
     }
 
@@ -65,8 +70,6 @@ public class GamePanel extends JPanel {
 
         for (BaseComponent component : BaseComponent.components)
             component.draw(graphics2D);
-
-        Main.getBall().draw(graphics2D);
 
         g.dispose();
     }
